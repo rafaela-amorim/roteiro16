@@ -66,8 +66,11 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T>
 	 * be BLACK.
 	 */
 	private boolean verifyChildrenOfRedNodes() {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");
+		boolean answer = true;
+		
+		
+		
+		return answer;
 	}
 
 	/**
