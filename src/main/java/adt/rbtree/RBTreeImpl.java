@@ -1,5 +1,7 @@
 package adt.rbtree;
 
+import java.util.ArrayList;
+
 import adt.bst.BSTImpl;
 import adt.bst.BSTNode;
 import adt.bt.Util;
@@ -65,20 +67,61 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T>
 	 * Verifies the property for all RED nodes: the children of a red node must
 	 * be BLACK.
 	 */
-	private boolean verifyChildrenOfRedNodes() {
+	protected boolean verifyChildrenOfRedNodes() {		
+		return verifyChildrenOfRedNodes((RBNode<T>) root);
+	}
+
+	private boolean verifyChildrenOfRedNodes(RBNode<T> node) {
 		boolean answer = true;
 		
-		
+		if (!node.isEmpty()) {
+			if (node.getColour() == Colour.RED) {
+				if (((RBNode<T>) node.getLeft()).getColour() != Colour.BLACK || 
+					((RBNode<T>) node.getRight()).getColour() != Colour.BLACK) 
+				{
+					answer = false;
+				} 
+			}
+			
+			if (answer) {
+				answer = verifyChildrenOfRedNodes((RBNode<T>) node.getLeft());
+				answer = verifyChildrenOfRedNodes((RBNode<T>) node.getRight());
+			}
+		}
 		
 		return answer;
 	}
-
+	
 	/**
 	 * Verifies the black-height property from the root.
 	 */
-	private boolean verifyBlackHeight() {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");
+	protected boolean verifyBlackHeight() {		
+		int hLeft = verifyBlackHeight((RBNode<T>) root, true);
+		int hRight = verifyBlackHeight((RBNode<T>) root, false);
+		return hLeft == hRight;
+	}
+	
+	private int verifyBlackHeight(RBNode<T> node, boolean left) {
+		int height = 0;
+		
+		if (!node.isEmpty()) {
+			if (node.getColour() == Colour.BLACK) {
+				if (left) {
+					height = 1 + verifyBlackHeight((RBNode<T>) node.getLeft(), left);
+				} else {
+					height = 1 + verifyBlackHeight((RBNode<T>) node.getRight(), left);
+				}
+		
+			} else {
+				if (left) {
+					height = verifyBlackHeight((RBNode<T>) node.getLeft(), left);
+				} else {
+					height = verifyBlackHeight((RBNode<T>) node.getRight(), left);
+				}
+			}
+		}
+		
+		return height;
 	}
 
 	@Override
@@ -87,6 +130,7 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T>
 			insert(root, value);
 			RBNode<T> node = (RBNode<T>) search(value);
 			node.setColour(Colour.RED);
+			fixUpCase1(node);
 		}
 	}
 	
@@ -109,10 +153,21 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T>
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public RBNode<T>[] rbPreOrder() {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");
+		ArrayList<RBNode<T>> list = new ArrayList<>();
+		rbPreOrder((RBNode<T>) root, list);
+		RBNode<T>[] answer = list.toArray(new RBNode[list.size()]);
+		return answer;
+	}
+	
+	private void rbPreOrder(RBNode<T> node, ArrayList<RBNode<T>> list) {
+		if (!node.isEmpty()) {
+			list.add(node);
+			rbPreOrder((RBNode<T>) node.getLeft(), list);
+			rbPreOrder((RBNode<T>) node.getRight(), list);
+		}
 	}
 
 	// FIXUP methods
