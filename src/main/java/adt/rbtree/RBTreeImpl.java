@@ -84,11 +84,28 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T>
 	@Override
 	public void insert(T value) {
 		if (value != null) {
-			insert(value);
+			insert(root, value);
 			RBNode<T> node = (RBNode<T>) search(value);
 			node.setColour(Colour.RED);
-			
-			
+		}
+	}
+	
+	@Override
+	protected void insert(BSTNode<T> node, T elem) {
+		node = (RBNode<T>) node;
+		
+		if (node.isEmpty()) {
+			node.setData(elem);
+			node.setLeft(new RBNode<>());
+			node.setRight(new RBNode<>());
+
+			node.getLeft().setParent(node);
+			node.getRight().setParent(node);
+		} else {
+			if (node.getData().compareTo(elem) > 0)
+				insert((RBNode<T>) node.getLeft(), elem);
+			else
+				insert((RBNode<T>) node.getRight(), elem);
 		}
 	}
 
