@@ -84,8 +84,8 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T>
 			}
 			
 			if (answer) {
-				answer = verifyChildrenOfRedNodes((RBNode<T>) node.getLeft());
-				answer = verifyChildrenOfRedNodes((RBNode<T>) node.getRight());
+				answer = verifyChildrenOfRedNodes((RBNode<T>) node.getLeft()) && 
+				    	 verifyChildrenOfRedNodes((RBNode<T>) node.getRight());
 			}
 		}
 		
@@ -128,9 +128,6 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T>
 	public void insert(T value) {
 		if (value != null) {
 			insert(root, value);
-			RBNode<T> node = (RBNode<T>) search(value);
-			node.setColour(Colour.RED);
-			fixUpCase1(node);
 		}
 	}
 	
@@ -145,6 +142,9 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T>
 
 			node.getLeft().setParent(node);
 			node.getRight().setParent(node);
+			
+			((RBNode<T>) node).setColour(Colour.RED);
+			fixUpCase1((RBNode<T>) node);
 		} else {
 			if (node.getData().compareTo(elem) > 0)
 				insert((RBNode<T>) node.getLeft(), elem);
