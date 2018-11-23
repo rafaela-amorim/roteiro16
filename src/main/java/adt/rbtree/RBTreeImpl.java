@@ -67,7 +67,7 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T>
 	 * Verifies the property for all RED nodes: the children of a red node must
 	 * be BLACK.
 	 */
-	protected boolean verifyChildrenOfRedNodes() {		
+	private boolean verifyChildrenOfRedNodes() {		
 		return verifyChildrenOfRedNodes((RBNode<T>) root);
 	}
 
@@ -95,7 +95,7 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T>
 	/**
 	 * Verifies the black-height property from the root.
 	 */
-	protected boolean verifyBlackHeight() {		
+	private boolean verifyBlackHeight() {		
 		int hLeft = verifyBlackHeight((RBNode<T>) root, true);
 		int hRight = verifyBlackHeight((RBNode<T>) root, false);
 		return hLeft == hRight;
