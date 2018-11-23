@@ -96,32 +96,23 @@ public class RBTreeImpl<T extends Comparable<T>> extends BSTImpl<T>
 	 * Verifies the black-height property from the root.
 	 */
 	private boolean verifyBlackHeight() {		
-		int hLeft = verifyBlackHeight((RBNode<T>) root, true);
-		int hRight = verifyBlackHeight((RBNode<T>) root, false);
-		return hLeft == hRight;
+		return verifyBlackHeight((RBNode<T>) root, 0, blackHeight());
 	}
 	
-	private int verifyBlackHeight(RBNode<T> node, boolean left) {
-		int height = 0;
+	private boolean verifyBlackHeight(RBNode<T> node, int contador, int size) {
+		boolean answer = true;
 		
 		if (!node.isEmpty()) {
 			if (node.getColour() == Colour.BLACK) {
-				if (left) {
-					height = 1 + verifyBlackHeight((RBNode<T>) node.getLeft(), left);
-				} else {
-					height = 1 + verifyBlackHeight((RBNode<T>) node.getRight(), left);
-				}
-		
+				answer = verifyBlackHeight((RBNode<T>) node.getLeft(), 1 + contador, size) && verifyBlackHeight((RBNode<T>) node.getRight(), 1 + contador, size);
 			} else {
-				if (left) {
-					height = verifyBlackHeight((RBNode<T>) node.getLeft(), left);
-				} else {
-					height = verifyBlackHeight((RBNode<T>) node.getRight(), left);
-				}
+				answer = verifyBlackHeight((RBNode<T>) node.getLeft(), contador, size) && verifyBlackHeight((RBNode<T>) node.getRight(), contador, size);
 			}
+		} else {
+			answer = (contador == size);
 		}
 		
-		return height;
+		return answer;
 	}
 
 	@Override
